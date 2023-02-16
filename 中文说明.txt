@@ -1,0 +1,13 @@
+con_descon_disk.sh 用来建立模拟磁盘，运行命令：./con_descon_disk.sh c b (c是代表construct,b和字符串sd一起组成你的hdd的标识符，如果你的hdd的标识符是sdc的话，运行命令就要改为./con_descon_disk.sh c c)
+
+如果要撤销建立的模拟磁盘，运行命令：./con_descon_disk.sh d
+
+con_descon_disk.sh里面可以更改策略
+
+之后要使用的脚本是iotest.sh,iotest.sh里面可以修改name的值来修改workload
+运行命令./iotest.sh fio ,等待io重放做完（大概30秒，需要测速达到0），然后运行命令./iotest.sh hfplayer
+新开一个终端运行sudo blktrace -w 10000 -d /dev/mapper/sadc  中间的数字代表测试时间为多少秒，在测试结束后会给出提示，此时依次运行：
+
+sudo blkparse -i dm-0 -d dm.bin
+sudo btt -i dm.bin -q q2c.lat
+新生成的文件q2c.lat_253,0_q2c.dat即为测试的数据，两列数据分别为io request的时间点和io latency的值

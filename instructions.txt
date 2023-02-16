@@ -1,0 +1,17 @@
+create a virtual disk:  ./con_descon_disk.sh c b
+deconstruct the virtual disk:  ./con_descon_disk.sh d
+
+replay:  ./iotest.sh fio
+./iotest.sh hfplayer
+
+collect data:
+sudo blktrace -w 10000 -d /dev/mapper/sadc 
+sudo blkparse -i dm-0 -d dm.bin
+sudo btt -i dm.bin -q q2c.lat
+
+to disable the write cache for the HDD:
+sudo hdparm -W 0 /dev/sdb
+/dev/sdb: write-caching =  0 (off) shows that the write cache is off
+
+to turn off automatic power saving on some Seagate hard drives:
+hdparm -Z /dev/sdb
